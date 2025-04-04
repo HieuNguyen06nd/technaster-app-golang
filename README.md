@@ -18,10 +18,8 @@ Dự án xây dựng hệ thống backend phục vụ ứng dụng học đa ng�
 ### Yêu cầu hệ thống
 - Go 1.18+
 - PostgreSQL 14+
-
 ### Bước 1: Cài đặt database
-```bash
-createdb language_learning
+	createdb language_learning
 
 ### Bước 2: Cấu hình biến môi trường( đối với 03)
   const (
@@ -40,10 +38,10 @@ Thay đổi tùy thuộc vào local trên máy
 
 Ảnh Minh họa: 
 
-01
+### 01
 ![image](https://github.com/user-attachments/assets/54110254-0af0-40dc-ba72-1827f6398a18)
-02
+### 02
 ![image](https://github.com/user-attachments/assets/37a0752e-e288-4c6e-8251-d110c81353bd)
-03
+### 03
 ![image](https://github.com/user-attachments/assets/0508902f-a5c5-42ae-b056-5cfeeb16cc00)
 
