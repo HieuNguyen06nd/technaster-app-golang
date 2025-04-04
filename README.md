@@ -22,6 +22,7 @@ Dự án xây dựng hệ thống backend phục vụ ứng dụng học đa ng�
 ### Bước 1: Cài đặt database
 ```bash
 createdb language_learning
+
 ### Bước 2: Cấu hình biến môi trường( đối với 03)
   const (
 	host     = "localhost" //Địa chỉ máy chủ cơ sở dữ liệu.
@@ -32,6 +33,7 @@ createdb language_learning
 	groqAPI  = "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" // Khóa API để xác thực với dịch vụ Groq
 )
 Thay đổi tùy thuộc vào local trên máy
+
 ### Bước 3: Chạy ứng dụng
   # Khởi chạy server
   go run main.go
