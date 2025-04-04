@@ -1,106 +1,238 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Tạo SSML từ hội thoại</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo SSML từ Hội Thoại</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin: 20px 0; 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
         }
-        th, td { 
-            border: 1px solid #ddd; 
-            padding: 12px; 
-            text-align: left; 
-            vertical-align: top; 
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
-        th { 
-            background-color: #f2f2f2; 
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
         }
-        #conversation { 
-            margin: 20px 0; 
+        .header-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: center;
         }
-        .line { 
-            margin: 8px 0; 
-            padding: 8px; 
-            background: #f9f9f9; 
-            border-radius: 4px; 
+        .header-item {
+            flex: 1;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: #2c3e50;
         }
-        button { 
-            padding: 10px 20px; 
-            background: #007bff; 
-            color: white; 
-            border: none; 
-            cursor: pointer; 
+        .controls-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
         }
-        #output { 
-            background: #f5f5f5; 
-            padding: 15px; 
-            margin-top: 20px; 
-            white-space: pre-wrap; 
+        .control-group {
+            flex: 1;
+        }
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            resize: vertical;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            margin: 0 auto 20px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .example-btn {
+            background-color: #95a5a6;
+            margin-right: 10px;
+        }
+        .example-btn:hover {
+            background-color: #7f8c8d;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .ssml-output {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px dashed #ccc;
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+            position: relative;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #2ecc71;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        .copy-btn:hover {
+            background-color: #27ae60;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
         }
     </style>
 </head>
 <body>
-    <h1>Tạo SSML từ hội thoại</h1>
-
-    <!-- Bảng phân chia Voice A và Voice B -->
-    <table>
-        <tr>
-            <th>Voice A (en-US-AndrewMultilingualNeural)</th>
-            <th>Voice B (vi-VN-HoaMyNeural)</th>
-        </tr>
-        <tr>
-            <td id="voiceA">
-                <div class="line">A: Chào Lan! Minh là James, đến từ Hoa Kỳ. Rất vui được gặp bạn.</div>
-                <div class="line">A: Bạn làm nghề gì vậy, Lan?</div>
-                <div class="line">A: Minh là kỹ sư hàng không.</div>
-                <div class="line">A: Minh mới đến đây được vài ngày.</div>
-                <div class="line">A: Cảm ơn Lan!</div>
-            </td>
-            <td id="voiceB">
-                <div class="line">B: Chào James! Minh là Lan, đến từ Việt Nam. Rất vui được làm quen với bạn.</div>
-                <div class="line">B: Minh là cô giáo dạy ngoại ngữ. Còn bạn?</div>
-                <div class="line">B: Nghe thú vị quá! Bạn đến Việt Nam lâu chưa?</div>
-                <div class="line">B: Hy vọng bạn sẽ thích Việt Nam!</div>
-            </td>
-        </tr>
-    </table>
-
-    <!-- Nút xuất SSML -->
-    <button onclick="generateSSML()">Xuất SSML</button>
-
-    <!-- Hiển thị kết quả -->
-    <pre id="output"></pre>
+    <div class="container">
+        <h1>Tạo File SSML từ Hội Thoại</h1>
+        
+        <!-- Dòng tiêu đề cùng hàng -->
+        <div class="header-row">
+            <div class="header-item">Voice A</div>
+            <div class="header-item">Voice B</div>
+            <div class="header-item">Xuất SSML</div>
+        </div>
+        
+        <!-- Dòng điều khiển cùng hàng -->
+        <div class="controls-row">
+            <div class="control-group">
+                <select id="voiceA">
+                    <option value="en-US-AndrewMultilingualNeural">en-US-AndrewMultilingualNeural</option>
+                    <option value="en-US-ChristopherNeural">en-US-ChristopherNeural</option>
+                    <option value="en-US-EricNeural">en-US-EricNeural</option>
+                    <option value="vi-VN-HoaiMyNeural">vi-VN-HoaiMyNeural</option>
+                    <option value="vi-VN-NamMinhNeural">vi-VN-NamMinhNeural</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <select id="voiceB">
+                    <option value="en-US-AndrewMultilingualNeural">en-US-AndrewMultilingualNeural</option>
+                    <option value="en-US-ChristopherNeural">en-US-ChristopherNeural</option>
+                    <option value="en-US-EricNeural">en-US-EricNeural</option>
+                    <option value="vi-VN-HoaiMyNeural" selected>vi-VN-HoaiMyNeural</option>
+                    <option value="vi-VN-NamMinhNeural">vi-VN-NamMinhNeural</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <button onclick="generateSSML()">Tạo SSML</button>
+            </div>
+        </div>
+        
+        <label for="conversation">Nhập hội thoại (mỗi câu bắt đầu bằng A: hoặc B:):</label>
+        <textarea id="conversation" placeholder="A: Chào Lan! Minh là James, đến từ Hoa Kỳ. Rất vui được gặp bạn.&#10;B: Chào James! Minh là Lan, đến từ Việt Nam. Rất vui được làm quen với bạn."></textarea>
+        
+        <div class="button-group">
+            <button class="example-btn" onclick="loadExample()">Tải Ví Dụ</button>
+        </div>
+        
+        <label>Kết quả SSML:</label>
+        <div class="ssml-output">
+            <button class="copy-btn" onclick="copySSML()">Copy</button>
+            <pre id="ssmlOutput"></pre>
+        </div>
+    </div>
 
     <script>
+        function loadExample() {
+            const exampleText = `A: Chào Lan! Minh là James, đến từ Hoa Kỳ. Rất vui được gặp bạn.
+B: Chào James! Minh là Lan, đến từ Việt Nam. Rất vui được làm quen với bạn.
+A: Bạn làm nghề gì vậy, Lan?
+B: Minh là cô giáo dạy ngoại ngữ. Còn bạn?
+A: Minh là kỹ sư hàng không.
+B: Nghe thú vị quá! Bạn đến Việt Nam lâu chưa?
+A: Minh mới đến đây được vài ngày.
+B: Hy vọng bạn sẽ thích Việt Nam!
+A: Cảm ơn Lan!`;
+            
+            document.getElementById('conversation').value = exampleText;
+            document.getElementById('voiceA').value = 'en-US-AndrewMultilingualNeural';
+            document.getElementById('voiceB').value = 'vi-VN-HoaiMyNeural';
+        }
+        
         function generateSSML() {
-            const voices = {
-                A: "en-US-AndrewMultilingualNeural",
-                B: "vi-VN-HoaMyNeural"
-            };
-
-            let ssml = `<speak xmlns="http://www.w3.org/2001/10/synthesis" version="1.0" xml:lang="vi-VN">\n`;
-
-            // Xử lý Voice A
-            document.querySelectorAll("#voiceA .line").forEach(line => {
-                const text = line.textContent.split(": ")[1];
-                ssml += `  <voice name="${voices.A}">\n`;
-                ssml += `    ${text}\n`;
-                ssml += `  </voice>\n`;
-            });
-
-            // Xử lý Voice B
-            document.querySelectorAll("#voiceB .line").forEach(line => {
-                const text = line.textContent.split(": ")[1];
-                ssml += `  <voice name="${voices.B}">\n`;
-                ssml += `    ${text}\n`;
-                ssml += `  </voice>\n`;
-            });
-
+            const conversation = document.getElementById('conversation').value.trim();
+            const voiceA = document.getElementById('voiceA').value;
+            const voiceB = document.getElementById('voiceB').value;
+            
+            if (!conversation) {
+                alert('Vui lòng nhập hội thoại!');
+                return;
+            }
+            
+            const lang = voiceB.includes('vi-VN') ? 'vi-VN' : 'en-US';
+            const lines = conversation.split('\n').filter(line => line.trim());
+            let ssml = `<speak xml:lang="${lang}">\n`;
+            
+            for (const line of lines) {
+                if (line.startsWith('A:')) {
+                    const text = line.substring(2).trim();
+                    ssml += `    <voice name="${voiceA}">${text}</voice>\n`;
+                } else if (line.startsWith('B:')) {
+                    const text = line.substring(2).trim();
+                    ssml += `    <voice name="${voiceB}">${text}</voice>\n`;
+                }
+            }
+            
             ssml += `</speak>`;
-            document.getElementById("output").textContent = ssml;
+            document.getElementById('ssmlOutput').textContent = ssml;
+        }
+        
+        function copySSML() {
+            const ssmlOutput = document.getElementById('ssmlOutput');
+            const range = document.createRange();
+            range.selectNode(ssmlOutput);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            
+            const copyBtn = document.querySelector('.copy-btn');
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = 'Đã Copy!';
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+            }, 2000);
         }
     </script>
 </body>
