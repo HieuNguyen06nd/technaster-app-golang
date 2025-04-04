@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tạo SSML từ hội thoại</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0; 
+        }
+        th, td { 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            text-align: left; 
+            vertical-align: top; 
+        }
+        th { 
+            background-color: #f2f2f2; 
+        }
+        #conversation { 
+            margin: 20px 0; 
+        }
+        .line { 
+            margin: 8px 0; 
+            padding: 8px; 
+            background: #f9f9f9; 
+            border-radius: 4px; 
+        }
+        button { 
+            padding: 10px 20px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+        }
+        #output { 
+            background: #f5f5f5; 
+            padding: 15px; 
+            margin-top: 20px; 
+            white-space: pre-wrap; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Tạo SSML từ hội thoại</h1>
+
+    <!-- Bảng phân chia Voice A và Voice B -->
+    <table>
+        <tr>
+            <th>Voice A (en-US-AndrewMultilingualNeural)</th>
+            <th>Voice B (vi-VN-HoaMyNeural)</th>
+        </tr>
+        <tr>
+            <td id="voiceA">
+                <div class="line">A: Chào Lan! Minh là James, đến từ Hoa Kỳ. Rất vui được gặp bạn.</div>
+                <div class="line">A: Bạn làm nghề gì vậy, Lan?</div>
+                <div class="line">A: Minh là kỹ sư hàng không.</div>
+                <div class="line">A: Minh mới đến đây được vài ngày.</div>
+                <div class="line">A: Cảm ơn Lan!</div>
+            </td>
+            <td id="voiceB">
+                <div class="line">B: Chào James! Minh là Lan, đến từ Việt Nam. Rất vui được làm quen với bạn.</div>
+                <div class="line">B: Minh là cô giáo dạy ngoại ngữ. Còn bạn?</div>
+                <div class="line">B: Nghe thú vị quá! Bạn đến Việt Nam lâu chưa?</div>
+                <div class="line">B: Hy vọng bạn sẽ thích Việt Nam!</div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Nút xuất SSML -->
+    <button onclick="generateSSML()">Xuất SSML</button>
+
+    <!-- Hiển thị kết quả -->
+    <pre id="output"></pre>
+
+    <script>
+        function generateSSML() {
+            const voices = {
+                A: "en-US-AndrewMultilingualNeural",
+                B: "vi-VN-HoaMyNeural"
+            };
+
+            let ssml = `<speak xmlns="http://www.w3.org/2001/10/synthesis" version="1.0" xml:lang="vi-VN">\n`;
+
+            // Xử lý Voice A
+            document.querySelectorAll("#voiceA .line").forEach(line => {
+                const text = line.textContent.split(": ")[1];
+                ssml += `  <voice name="${voices.A}">\n`;
+                ssml += `    ${text}\n`;
+                ssml += `  </voice>\n`;
+            });
+
+            // Xử lý Voice B
+            document.querySelectorAll("#voiceB .line").forEach(line => {
+                const text = line.textContent.split(": ")[1];
+                ssml += `  <voice name="${voices.B}">\n`;
+                ssml += `    ${text}\n`;
+                ssml += `  </voice>\n`;
+            });
+
+            ssml += `</speak>`;
+            document.getElementById("output").textContent = ssml;
+        }
+    </script>
+</body>
+</html>

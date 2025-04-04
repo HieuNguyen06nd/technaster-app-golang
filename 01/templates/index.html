@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Groq Chat</title>
+</head>
+<body>
+    <textarea id="prompt"></textarea>
+    <button onclick="askGroq()">Gửi</button>
+    <div id="response"></div>
+
+    <script>
+        async function askGroq() {
+            let prompt = document.getElementById("prompt").value;
+            let res = await fetch("/ask", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt })
+            });
+            let data = await res.json();
+            document.getElementById("response").innerHTML = data.response;
+        }
+    </script>
+</body>
+</html>
